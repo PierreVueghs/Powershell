@@ -15,10 +15,9 @@
 $SourcePath = "C:\T25147\"
 
 # Configuration of remote (Linux) server
-$LinuxServer = "orin-nx"           # Ip addres or hostname of the remote (Linux) server
-$LinuxUsername = "vision"           # User name
-$LinuxRemotePath = "/home/vision/temp"  # Absolute path to the server, where archive will be sent
-$Identification = "C:\Users\vueghsp\.ssh\id_vision_rsa" # RSA key (to shortcut password in interactive mode)
+$LinuxServer = "vst-gandalf.euresys.com"           # Ip addres or hostname of the remote (Linux) server
+$LinuxUsername = "chinesepcsbackup"           # User name
+$LinuxRemotePath = "/home/chinesepcsbackup/temp"  # Absolute path to the server, where archive will be sent
 
 # Options
 $DeleteLocalArchiveAfterTransfer = $true # Delete local archive after upload
@@ -49,7 +48,7 @@ if (-not (Test-Path -Path $SourcePath)) {
 }
 
 # Create a name for the archive
-$SourceFolderName = Split-Path -Path $SourcePath -Leaf
+$SourceFolderName = $env:userdomain
 
 if ($IncludeTimestampInName) {
     $DateStamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
@@ -90,7 +89,7 @@ try {
         # Build a process to execute SCP
         $Process = New-Object System.Diagnostics.Process
         $Process.StartInfo.FileName = "scp"
-		$Process.StartInfo.Arguments = "-i `"$Identification`" `"$ArchivePath`" `"$RemoteTarget`""
+        $Process.StartInfo.Arguments = "`"$ArchivePath`" `"$RemoteTarget`""
         $Process.StartInfo.UseShellExecute = $false
         $Process.StartInfo.RedirectStandardOutput = $true
         $Process.StartInfo.RedirectStandardError = $true
@@ -138,6 +137,7 @@ try {
             # Remove local archive if selected
             if ($DeleteLocalArchiveAfterTransfer -and (Test-Path -Path $ArchivePath)) {
                 Remove-Item -Path $ArchivePath -Force
+	Get-ChildItem -Path $SourcePath -Include *.* -Recurse | foreach { $_.Delete()}
                 Write-Log "Local archive deleted"
             }
         } else {

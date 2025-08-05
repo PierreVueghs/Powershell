@@ -11,7 +11,7 @@
 
 # Storage directory
 $OutputDirectory = "C:\T25147\"
-$ExecutablePath = "C:\Program Files\CodeMeter\Runtime\bin\cmu32.exe"
+$ExecutablePath = "C:\Program Files (x86)\CodeMeter\Runtime\bin\cmu32.exe"
 $ExecutableArgs = "--cmdust --file"
 $FilePrefix = "CmDustFile"
 $FileExtension = ".txt"

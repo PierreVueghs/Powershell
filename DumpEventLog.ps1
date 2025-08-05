@@ -32,5 +32,5 @@ if (-not (Test-Path -Path $BackupDirectory)) {
 $DateStamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
 
 # File name with journal type and timestamp
-Get-EventLog -LogName "Application" | Export-Csv -Path $BackupDirectory"EventLog_Application_$DateStamp.csv" -NoTypeInformation
-Get-EventLog -LogName "System" | Export-Csv -Path $BackupDirectory"EventLog_System_$DateStamp.csv" -NoTypeInformation
+Get-EventLog -LogName "Application" | Export-Csv -Path $BackupDirectory"EventLog_Application_$DateStamp.csv" -NoTypeInformation -Encoding UTF8
+Get-EventLog -LogName "System" | Export-Csv -Path $BackupDirectory"EventLog_System_$DateStamp.csv" -NoTypeInformation -Encoding UTF8

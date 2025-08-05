@@ -58,11 +58,11 @@ try {
     # Add line in log file
     if ($FileExists) {
         # Add line to existing file without header
-        $DataRow | Export-Csv -Path $OutputFile -Append -NoTypeInformation -UseCulture
+        $DataRow | Export-Csv -Path $OutputFile -Append -NoTypeInformation -UseCulture -Encoding UTF8
         Write-Host "Data added to existing file: $OutputFile"
     } else {
         # Create new file with header
-        $DataRow | Export-Csv -Path $OutputFile -NoTypeInformation -UseCulture
+        $DataRow | Export-Csv -Path $OutputFile -NoTypeInformation -UseCulture -Encoding UTF8
         Write-Host "New file: $OutputFile"
     }
     
