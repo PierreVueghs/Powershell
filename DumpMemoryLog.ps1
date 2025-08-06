@@ -13,8 +13,10 @@ $OutputDirectory = "C:\T25147\"
 $FilePrefix = "MemoryUsage_"
 $FileExtension = ".csv"
 $TimestampFormat = "yyyy-MM-dd_HH-mm-ss"
-$TopProcessCount = 10
+$TopProcessCount = 30
 $IncludeProcessDetails = $true
+$CumulativeFileName = "MemoryUsage_Cumulative.csv"
+$CumulativeFilePath = Join-Path -Path $OutputDirectory -ChildPath $CumulativeFileName
 # ======= END OF CONFIGURATION =======
 
 # Log function
@@ -124,26 +126,22 @@ try {
         }
     }
     
-    # Create a collection of objects for export
-    $ExportObjects = @()
-    $ExportObjects += $MemoryInfo
-    
-    # Export data in CSV file
-    $ExportObjects | Export-Csv -Path $OutputFilePath -NoTypeInformation -Encoding UTF8
-    
     # In case details on most memory-consuming processes are included, add them to CSV file
     if ($IncludeProcessDetails) {
-        # Add an empty separator
-        "" | Add-Content -Path $OutputFilePath
-        
-        # Add header
-        "Top $TopProcessCount Processes by Memory Usage" | Add-Content -Path $OutputFilePath
-        
         # Add details
         $ProcessDetails | Export-Csv -Path "$OutputFilePath.temp" -NoTypeInformation -Encoding UTF8
         Get-Content -Path "$OutputFilePath.temp" | Add-Content -Path $OutputFilePath
         Remove-Item -Path "$OutputFilePath.temp" -Force
     }
+	
+	# Export to the cumulative file
+	if (Test-Path -Path $CumulativeFilePath) {
+		# File already exists, append data without headers
+		$MemoryInfo | Export-Csv -Path $CumulativeFilePath -NoTypeInformation -Encoding UTF8 -Append
+	} else {
+		# File doesn't exist, create it with headers
+		$MemoryInfo | Export-Csv -Path $CumulativeFilePath -NoTypeInformation -Encoding UTF8
+	}
     
     Write-Log "Information about memory stored in: $OutputFilePath"
     
